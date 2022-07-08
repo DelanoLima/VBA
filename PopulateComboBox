@@ -1,0 +1,41 @@
+'----------------------------------------------------------------------------------------------------
+' Autor: Delano Lima de Carvalho | E-mail: limadelano@gmail.com
+' Descrição:
+'   Procedimento para popular um ComboBox com uma coluna
+' Argumentos:
+'   cb:       Name atribuído a ComboBox a ser populada
+'   start:    Enredeço da primeira célula da fonte de dados
+'   repeat:   True - Permite valores repetidos, False - Não permite. Argumento opcional. Valor padrão: True.
+' Exemplo de uso:
+'   Call PopulateComboBox(cb_teste1, Range("A1"), False)
+'----------------------------------------------------------------------------------------------------
+Sub (cb As control, start As Range, Optional repeat As Boolean = True)
+    'Instancia a variável para iterar a linhas da fonte de dados
+    Dim iRow As Integer
+    'Instancia a variável para verificar se o valor atual é repetido
+    Dim isReapeated As Integer
+
+    'Atribui or valor inicial da variável de iteração igual o valor da linha da primeira célula da fonte de dados
+    iRow = start.row
+    'Limpa o ComboBox
+    cb.Clear
+
+    'Loop para navegar pela fonte e popular o ComboBox, que acontece enquanto não entrar uma célula vazia
+    Do While Cells(iRow, start.Column).Value <> ""
+        'Verifica se foi optado por permitir valores repetidos no ComboBox
+        If repeat Then
+            'Se permite valor repetidos atribui o valor 0 a variável de controle
+            isReapeated = 0
+        Else
+            'Conta a quantidade de repetições do valor atual
+            isReapeated = WorksheetFunction.CountIf(Planilha3.Range(Cells(start.row, start.Column), Cells(iRow, start.Column)), Cells(iRow, start.Column)) - 1
+        End If
+        'Verifica se a quantidade de repetições é menor ou igual a 1
+        If isReapeated <= 1 Then
+            'Se for menor ou igual a 1, adiciona o valor da célula no ComboBox
+            cb.AddItem Cells(iRow, start.Column).Text
+        End If
+        'Incrementa a variável de iteração
+        iRow = iRow + 1
+    Loop
+End Sub
